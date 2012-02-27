@@ -37,5 +37,6 @@ for ix = 1:descriptorCount;
         dy = sum(D_Right(:,iy));
         similarity(ix,iy) = similarity(ix,iy) + abs(dx - dy);
     end
-    maxSimilarity(1,ix) = min(similarity(ix,:));
+    [rte, index] = min(similarity(ix,:));
+    maxSimilarity(1,ix) = index;
 end
