@@ -27,12 +27,15 @@ set(h1,'color','k','linewidth',3) ;
 set(h2,'color','y','linewidth',2) ;
 
 [vectorLength,descriptorCount] = size(D_Left);
+[vectorLength2,descriptorCount2] = size(D_Right);
 
-similarity = zeros(descriptorCount,descriptorCount);
+similarity = zeros(descriptorCount,descriptorCount2);
 maxSimilarity = zeros(1,descriptorCount);
 for ix = 1:descriptorCount;
-    for iy = 1:vectorLength;
-        similarity(ix,iy) = similarity(ix,iy) + abs(D_Left(iy) - D_Right(iy));
-    end;
-    maxSimilarity(ix) = max(similarity(ix));
+    dx = sum(D_Left(:,ix));
+    for iy = 1:descriptorCount2;
+        dy = sum(D_Right(:,iy));
+        similarity(ix,iy) = similarity(ix,iy) + abs(dx - dy);
+    end
+    maxSimilarity(1,ix) = min(similarity(ix,:));
 end
