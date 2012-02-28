@@ -83,9 +83,25 @@ end
 [value, index]=max(hscores);
 
 t = maketform('projective',homographies(:,:,index)');
-[mosaic xdata ydata] = imtransform(Im1,t);
-imagesc(mosaic), colormap gray;
-hold on;
-[mosaic2 xdata ydata] = imtransform(Im2,t);
-imagesc(mosaic2), colormap gray;
+[mosaic1 xdata1 ydata1] = imtransform(Im1,t);
+imagesc(mosaic1), colormap gray;
 
+t = maketform('projective',eye(3));
+[mosaic2 xdata2 ydata2] = imtransform(Im2,t);
+imagesc(mosaic2), colormap gray;
+imagesc(max(mosaic1,mosaic2));
+
+xMin = min(xdata1(1), xdata2(1));
+xMax = max(xdata1(2), xdata2(2));
+yMin = min(ydata1(1), ydata2(1));
+yMax = max(ydata1(2), ydata2(2));
+
+xRange = ceil(abs(xMin) + xMax);
+yRange = ceil(abs(yMin) + yMax);
+
+
+mosaic = zeros(yRange,xRange);
+mosaic(1:size(mosaic1,1), 1:size(mosaic1,2)) = mosaic1;
+mosaic(abs(floor(xMin)):size(mosaic2,1)+abs(floor(xMin)), 112:size(mosaic2,2)+112) = mosaic2;
+
+mosaic(-round(yMin):size(mosaic2,1)-round(yMin)-1, round(-xMin):xRange-2) = mosaic2;
