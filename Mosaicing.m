@@ -11,23 +11,23 @@ Im2 = rgb2gray(Image2);
 [F_1,D_1] = vl_sift(im2single(Im1));
 [F_2,D_2] = vl_sift(im2single(Im2));
 
-%figure(1), imagesc(Im1), colormap gray, axis off, axis image;
-%hold on;
-%perm = randperm(size(F_1,2)) ; 
-%sel = perm(1:50) ;
-%h1 = vl_plotframe(F_1(:,sel)) ; 
-%h2 = vl_plotframe(F_1(:,sel)) ; 
-%set(h1,'color','k','linewidth',3) ;
-%set(h2,'color','y','linewidth',2) ;
+figure(1), imagesc(Im1), colormap gray, axis off, axis image;
+hold on;
+perm = randperm(size(F_1,2)) ; 
+sel = perm(1:50) ;
+h1 = vl_plotframe(F_1(:,sel)) ; 
+h2 = vl_plotframe(F_1(:,sel)) ; 
+set(h1,'color','k','linewidth',3) ;
+set(h2,'color','y','linewidth',2) ;
 
-%figure(2), imagesc(Im2), colormap gray, axis off, axis image;
-%hold on;
-%perm = randperm(size(F_2,2)) ; 
-%sel = perm(1:50) ;
-%h1 = vl_plotframe(F_2(:,sel)) ; 
-%h2 = vl_plotframe(F_2(:,sel)) ; 
-%set(h1,'color','k','linewidth',3) ;
-%set(h2,'color','y','linewidth',2) ;
+figure(2), imagesc(Im2), colormap gray, axis off, axis image;
+hold on;
+perm = randperm(size(F_2,2)) ; 
+sel = perm(1:50) ;
+h1 = vl_plotframe(F_2(:,sel)) ; 
+h2 = vl_plotframe(F_2(:,sel)) ; 
+set(h1,'color','k','linewidth',3) ;
+set(h2,'color','y','linewidth',2) ;
 
 [vectorLength,descriptorCount] = size(D_1);
 [vectorLength2,descriptorCount2] = size(D_2);
@@ -168,5 +168,5 @@ end
 
 mosaic(111:110+size(lss{1},1),floor(abs(xdata1(1)))+1:floor(abs(xdata1(1)))+size(lss{1},2)) = mosaic(111:110+size(lss{1},1),floor(abs(xdata1(1)))+1:floor(abs(xdata1(1)))+size(lss{1},2)) - lss{1};
 colormap gray;
-figure(2), imagesc(mosaic);
+figure(2), imagesc(mosaic), axis off, axis image;
 
