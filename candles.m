@@ -1,9 +1,9 @@
 run('vlfeat-0.9.14/toolbox/vl_setup');
-imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/left1.png'),fspecial('Gaussian',[5 5],1));
-Image1 = im2double(imresize(imBlur,[400,525]))/255;
+imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/WP_000286.jpg'),fspecial('Gaussian',[5 5],1));
+Image1 = im2double(imresize(imBlur,[500,700]))/255;
 Im1 = rgb2gray(Image1);
-imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/right1.png'),fspecial('Gaussian',[5 5],1));
-Image2 = im2double(imresize(imBlur,[400,525]))/255;
+imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/WP_000287.jpg'),fspecial('Gaussian',[5 5],1));
+Image2 = im2double(imresize(imBlur,[500,700]))/255;
 Im2 = rgb2gray(Image2);
 
 
@@ -121,8 +121,8 @@ imagesc(mosaic);
 %blendRegion1 =  blendRegion1(:, 1+5:size(blendRegion1,2)+5);
 %blendRegion2 = mosaic2(:,1:xdata1(2)+2);
 
-blendRegion1 = mosaic1(111:510,floor(abs(xdata1(1))):size(mosaic1,2)-(xdata1(2)/2)-2);
-blendRegion2 = mosaic2(:,xdata1(2)/2:xdata1(2));
+blendRegion1 = mosaic1(:,1:xdata1(2)/2+1);
+blendRegion2 = mosaic2(4:500,xdata1(2)/2:xdata1(2));
 
 %% image pyramid
 imBlur = blendRegion1;
@@ -165,8 +165,9 @@ for p = 6:2
     limgo{p-1} = limgo{p-1} + impyramid(limgo{p}, 'expand'); 
     lss{p-1} = lss{p-1} + impyramid(lss{p}, 'expand'); 
 end
-
-mosaic(111:110+size(lss{1},1),floor(abs(xdata1(1)))+1:floor(abs(xdata1(1)))+size(lss{1},2)) = mosaic(111:110+size(lss{1},1),floor(abs(xdata1(1)))+1:floor(abs(xdata1(1)))+size(lss{1},2)) - lss{1};
+xStart = floor(abs(xdata1(1)));
+[lssX, lssY] = size(lss{1});
+mosaic(6:502,xStart+1:xStart+size(lss{1},2)) = mosaic(6:502,xStart+1:xStart+size(lss{1},2)) - lss{1};
 colormap gray;
 figure(2), imagesc(mosaic);
 
