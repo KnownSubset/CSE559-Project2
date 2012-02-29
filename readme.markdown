@@ -64,11 +64,12 @@ Here are the two images with the matching points correlated aftering determing t
 
 
 1. Ransac
- The algorithm was able to produce reasonable results from matching points.  
+ The algorithm was able to produce reasonable results from matching points.  The best homography that was produced was able to map images coordinates systems together.
 
 2. % of inliers
 
  76 points out of 118 matches were able to matched between the two images
+ ![Inliers-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers-1.jpg "inliers-1")
 
 3. Observations
 
@@ -76,7 +77,11 @@ Here are the two images with the matching points correlated aftering determing t
 1. Ransac
 
 2. % of inliers
+
  82 points of 133.  This was unexpected to me, as the two images were vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
+ ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers-2.jpg "inliers-2")
+
+
 3. Observations
 
 ### Attempt 2 (Failure Example)
@@ -121,15 +126,18 @@ _______
 #Lapcian blend
 
 General Approach:
-Build Laplacian pyramids LA and LB from images A and B
-Build a Gaussian pyramid GR from selected region R
-Form a combined pyramid LS from LA and LB using nodes of GR as weights:
-LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
-Collapse the LS pyramid to get the final blended image
+1. Build Laplacian pyramids LA and LB from images A and B
+2. Build a Gaussian pyramid GR from selected region R
+3. Form a combined pyramid LS from LA and LB using nodes of GR as weights:
+4. LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
+5. Collapse the LS pyramid to get the final blended image
 
 
-![Wider Window](https://github.com/KnownSubset/CSE559-Project2/raw/master/blend-failure.jpg "<< Sharp Blend")
-![Even Widered Blend Window](https://github.com/KnownSubset/CSE559-Project2/raw/master/blended-candles1.jpg "<<< Sharp Blend")
+I attempted to calculate the window in which the blending would need to occur instead of attempting on the entire image as the math requires the matrixes to be of the same size.  I did not know of a reasonable way to get this working with cropping the images to be the same size.  When attempting this on the region of the images that would need to be blended, the results were quite disasterious.
+
+![Lapcian Blend results](https://github.com/KnownSubset/CSE559-Project2/raw/master/blend-failure.jpg "Lapcian Blend")
+
+![Lapcian Blend failure](https://github.com/KnownSubset/CSE559-Project2/raw/master/pyramid.jpg "Lapcian Blend failure")
 
 
 
