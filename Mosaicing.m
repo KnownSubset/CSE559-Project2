@@ -5,6 +5,9 @@ Im1 = rgb2gray(Image1);
 imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/right1.png'),fspecial('Gaussian',[5 5],1));
 Image2 = im2double(imresize(imBlur,[400,525]))/255;
 Im2 = rgb2gray(Image2);
+
+
+%%SIFT Feature discovery
 [F_1,D_1] = vl_sift(im2single(Im1));
 [F_2,D_2] = vl_sift(im2single(Im2));
 
@@ -44,6 +47,7 @@ for ix = 1:descriptorCount;
     maxSimilarity(1,ix) = index;
 end
 
+%% Ransac
 hscores = zeros(1,1:40);
 % score homography
 X1 = cat(1,F_1(1:2,matches(1,:)),ones(1,size(matches,2)));
@@ -82,6 +86,7 @@ end
 
 [value, index]=max(hscores);
 
+%% Merge images together
 t = maketform('projective',homographies(:,:,index)');
 [mosaic1 xdata1 ydata1] = imtransform(Im1,t);
 imagesc(mosaic1), colormap gray;
@@ -101,20 +106,49 @@ yRange = ceil(abs(yMin) + yMax);
 
 mosaic = zeros(yRange,xRange);
 mosaic(1:size(mosaic1,1), 1:size(mosaic1,2)) = mosaic1;
-mosaic(-round(yMin):size(mosaic2,1)-round(yMin)-1, round(-xMin):xRange-1) = mosaic2;
+%size(mosaic(-round(yMin)+5:size(mosaic2,1)-round(yMin)-2, round(-xMin)+1:xRange-2))
+%size(mosaic2(2:size(mosaic2,1)-5,2:size(mosaic2,2)))
+
+
+%need some work on feather the edges of the images
+mosaic(-round(yMin)+5:size(mosaic2,1)-round(yMin)-2, round(-xMin)+1:xRange-2) = mosaic2(2:size(mosaic2,1)-5,2:size(mosaic2,2) - 1);
 imagesc(mosaic);
 
-%% image pyramid
 
+%% Blending
+blendRegion1 = mosaic1(:,floor(abs(xdata1(1))):size(mosaic1,2)-(xdata1(2)/2));
+blendRegion2 = mosaic1(:,xdata1(2)/2:xdata1(2));
+maska = zeros(size(mosaic1));
+maska(:,1:v,:) = 1;
+maskb = 1-maska;
+blurh = fspecial('gauss',30,15); % feather the border
+maska = imfilter(maska,blurh,'replicate');
+maskb = imfilter(maskb,blurh,'replicate');
+
+limgo = cell(1,level); % the blended pyramid
+for p = 1:level
+	[Mp Np ~] = size(limga{p});
+	maskap = imresize(maska,[Mp Np]);
+	maskbp = imresize(maskb,[Mp Np]);
+	limgo{p} = limga{p}.*maskap + limgb{p}.*maskbp;  %Form a combined pyramid LS from LA and LB using nodes of GR as weights: LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
+
+end
+imgo = pyrReconstruct(limgo);
+figure,imshow(imgo) % blend by pyramid
+imgo1 = maska.*imga+maskb.*imgb;
+figure,imshow(imgo1) % blend by feathering
+
+%% image pyramid
+imBlur = mosaic;
 for ix = 1:6;
-    imBlur = imfilter(mosaic,fspecial('Gaussian',[5 5],1));
-    imL = mosaic - imBlur;  % Laplacian
-    mosaicBlurred = imresize(imBlur,0.5);
+    imG = imfilter(imBlur,fspecial('Gaussian',[5 5],1));
+    imL = imBlur - imG;  % Laplacian
+    imBlur = imresize(imG,0.5);
     subplot(1,2,1);
     
     imagesc(imL); title('Laplacian');
     subplot(1,2,2);
    
-    imagesc(mosaicBlurred); title('Gaussian');
+    imagesc(imG); title('Gaussian');
     pause;
 end
