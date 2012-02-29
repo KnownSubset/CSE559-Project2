@@ -84,8 +84,8 @@ Here are the two images with the matching points correlated aftering determing t
 
 2. % of inliers
  
- 82 points of 133.  This was unexpected to me, as the two images were vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
-
+ This was unexpected to me, as the two images were vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
+ When I was debugging my code and using the vl_ubcmatch fuction packaged with vl_feat, the percentage of inliers was much higher.   82 points of 133.  I don't know if I should be proud of or disheartened that my percentage of inliers lower considering the two images were greatly similiar but the homography said that they should be flipped.
  ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers2.jpg "inliers-2")
  
  Another point of investigation could be to reshoot the images using a tripod and view the results.
@@ -112,15 +112,16 @@ _______
 _______
 
 #Feathering blend
-Encoding transparency
-I(x,y) = (aR, aG, aB, a) 
-Iblend = Ileft + Iright
+
+Feathering is a method that gradually fades two images together to help hide the differences. 
 
 What is the Optimal Window?
 To avoid seams
 window >= size of largest prominent feature
 To avoid ghosting
 window <= 2*size of smallest prominent feature
+
+I got some clues on how to implement feathering from [this slide deck](http://www.seas.upenn.edu/~cse399b/Lectures/CSE399b-11-Blending.ppt) I wasn't able to determine the author, but they were adapted from Alexei Efros @ CMU.
 
 
 ![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000288.jpg "Red")
@@ -139,7 +140,16 @@ General Approach:
 3. Form a combined pyramid LS from LA and LB using nodes of GR as weights:
 4. LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
 5. Collapse the LS pyramid to get the final blended image
+I gathered the method from [the same slide deck](http://www.seas.upenn.edu/~cse399b/Lectures/CSE399b-11-Blending.ppt)
 
+Or as we can see in picuters 
+1. Generate Laplacian from Guassians
+![Guassians](http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/figure1.jpg "Generate Lapicains from Guassians")
+2. Combine Lapicains at each level
+![Laplacian](http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/figure2.jpg "Laplacian")
+3. Reconstruct image from Laplacians
+![Reconstruct](http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/figure3.jpg "")
+These images were taken from Chaman Singh Verma's  and Mon-Ju's page on [image blending](http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/imagemosaic.html)
 
 I attempted to calculate the window in which the blending would need to occur instead of attempting on the entire image as the math requires the matrixes to be of the same size.  I did not know of a reasonable way to get this working with cropping the images to be the same size.  When attempting this on the region of the images that would need to be blended, the results were quite disasterious.
 
