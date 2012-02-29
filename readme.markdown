@@ -70,9 +70,9 @@ Here are the two images with the matching points correlated aftering determing t
 1. Ransac
  The algorithm was able to produce reasonable results from matching points.  The best homography that was produced was able to map images coordinates systems together.
 
-2. % of inliers
+2. Percentage of inliers
 
- 76 points out of 118 matches were able to matched between the two images
+ 76 points out of 118 matches were able to matched between the two images.  As you can see from the images below, the inliers that were found map fairly well between the two images.  Some of the outliers were features that were in the reflection of the original image from the lake.   It would have been interesting to mirror the image horizontially and see how the images would have mapped between each other.  Other outliers were the faces of the various cliffs that were excluded once the best homography found that those two points would not line up.
  ![Inliers-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers1.jpg "inliers-1")
 
 3. Observations
