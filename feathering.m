@@ -117,15 +117,10 @@ imagesc(mosaic);
 
 
 %% Blending
-%blendRegion1 = mosaic1(106:515,floor(abs(xdata1(1)))-5:size(mosaic1,2)); % 410x214
-%blendRegion1 =  blendRegion1(:, 1+5:size(blendRegion1,2)+5);
-%blendRegion2 = mosaic2(:,1:xdata1(2)+2);
 
-blendRegion1 = mosaic1(:,xdata1(2)/2:xdata1(2));
-blendRegion2 = mosaic2(5:500,1:xdata1(2)/2+1);
 
 %% image pyramid
-imBlur = blendRegion1;
+imBlur = mosaic1;
 ls1 = cell([1 6]);gs1 = cell([1 6]);
 
 for ix = 1:6;
@@ -136,7 +131,7 @@ for ix = 1:6;
     gs1{ix} = imG;
 end
 
-imBlur = blendRegion2;
+imBlur = mosaic2;
 ls2 = cell([1 6]);gs2 = cell([1 6]);
 for ix = 1:6;
     imG = imfilter(imBlur,fspecial('Gaussian',[5 5],1));
@@ -146,28 +141,18 @@ for ix = 1:6;
     gs2{ix} = imG;
 end
 
-limgo = cell(1,6); % the blended pyramid
-lss = cell(1,6); % the blended pyramid
-for p = 1:3
-    
-	[Mp Np ~] = size(ls1{p});
-	ls = zeros(Mp, Np*2);
-    ls(:,1:Np) = ls2{p};
-    ls(:,Np+1:2*Np) = ls1{p};
-    lss{p} = ls;
-    maskap = gs1{p};
-	maskbp = gs2{p};
-	limgo{p} = ls1{p}.*maskap + ls2{p}.*(1 - maskbp);  %Form a combined pyramid LS from LA and LB using nodes of GR as weights: LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
-end
+mask1 = zeros(size(mosaic1));
+mask1(:,1:(size(mask1,2)*.52)) = 1;
+mask2 = 1-mask1;
+% The elements that are = 1, will be blurred, which will cause the
+% feathering effect that I am looking for
+gaussian = fspecial('gauss',30,5); 
+mask1 = imfilter(mask1,gaussian,'replicate');
+mask2 = imfilter(mask2,gaussian,'replicate');
+featheredImage = mask1.*mosaic2(1:496,1:692)+mask2.*mosaic1;
+% blend by feathering
+imagesc(featheredImage) 
 
-imBlur = zeros(size(limgo{6}));
-for p = 3:2
-    limgo{p-1} = limgo{p-1} + impyramid(limgo{p}, 'expand'); 
-    lss{p-1} = lss{p-1} + impyramid(lss{p}, 'expand'); 
-end
-xStart = floor(abs(xdata1(1)));
-[lssX, lssY] = size(lss{1});
-mosaic(4:499,xStart+1:xStart+size(lss{1},2)) = mosaic(4:499,xStart+1:xStart+size(lss{1},2)) - lss{1};
-colormap gray;
+
 figure(2), imagesc(mosaic), colormap gray;
 figure(3), imagesc(lss{1})
