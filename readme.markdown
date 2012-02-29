@@ -11,7 +11,7 @@ For projecting on the same surface, I stuck with a planar mapping.  If I had som
 The following puesdocode is what I used to generate the homography that mapped two images geometeries together.  
 I cannot really supply any good puesdocode for merging the images together, as I had a lot of difficulty with this aspect and had manually play around with the images until I was able to get it to work.
 
-    '''matlab
+    ```matlab
     %Image1 & Image2 are already available
 
     %%SIFT Feature discovery
@@ -49,7 +49,7 @@ I cannot really supply any good puesdocode for merging the images together, as I
 
     %Declare Success
     %Map images onto a surface
-    '''
+    ```
     
 ### Attempt 1
 For my first attempt I used the two images from the slides as a way to help ensure that I was on the correct path to solving the problem.
@@ -130,7 +130,7 @@ Feathering is a method that gradually fades two images together to help hide the
 **To avoid ghosting
 ***window <= 2*size of smallest prominent feature
 
-    '''matlab
+    ```matlab
     width = size(Image1,2);
     mask1 = zeros(size(Image1));
     window = max(size(largest_feature)) - min(size(smallest_feature));
@@ -141,7 +141,8 @@ Feathering is a method that gradually fades two images together to help hide the
     mask1 = imfilter(mask1,gaussian,'replicate'); %Blur mask
     mask2 = imfilter(mask2,gaussian,'replicate'); %Blur mask
     featheredImage = mask1.*mosaic1+mask2.*mosaic2;
-    '''
+    ```
+
 
 I got some clues on how to implement feathering from [this slide deck](http://www.seas.upenn.edu/~cse399b/Lectures/CSE399b-11-Blending.ppt) I wasn't able to determine the author, but they were adapted from Alexei Efros @ CMU.
 
@@ -154,7 +155,7 @@ I got some clues on how to implement feathering from [this slide deck](http://ww
 
 _______
 
-#Lapcian blend
+#Laplacian blend
 
 General Approach:
 
@@ -171,7 +172,7 @@ Or as we can see in picuters
 
 ![Guassians](http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/figure1.jpg "Generate Lapicains from Guassians")
 
-2. Combine Lapicains at each level
+2. Combine Laplacians at each level
 
 ![Laplacian](http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/figure2.jpg "Laplacian")
 
@@ -188,4 +189,31 @@ I attempted to calculate the window in which the blending would need to occur in
 ![Lapcian Blend failure](https://github.com/KnownSubset/CSE559-Project2/raw/master/pyramid.jpg "Lapcian Blend failure")
 
 
+As I found out with a little insight the correct way to use Laplacian blend would have to basically apply the feathering techniques on the entire image that was generated through Laplacian pyramids.
+
+    ```matlab
+    width = size(Image1,2);
+    mask = zeros(size(Image1));
+    mask(:,1:middle_of_blend_region) = 1;
+    Image = Image * mask;
+
+    for level = 1:6;
+        imG = imfilter(Image,fspecial('Gaussian',[5 5],1));
+        imL = Image - imG;  % Laplacian
+        Image = imresize(Image,0.5);
+        laplacians{level} = imL;
+        gaussians{level} = imG;
+    end
+    %Reconstruct Image
+    for level = 6:2;
+       limgo{p-1} = limgo{p-1} + impyramid(limgo{p}, 'expand');
+       laplacians{p-1} = laplacians{p-1} + impyramid(laplacians{p}, 'expand');
+    end
+
+    %Do same for right side
+
+    %Then combine images
+    Mosaic = LeftImage + RightImage
+
+    ```
 
