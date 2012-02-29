@@ -146,12 +146,12 @@ mask1(:,1:(size(mask1,2)*.52)) = 1;
 mask2 = 1-mask1;
 % The elements that are = 1, will be blurred, which will cause the
 % feathering effect that I am looking for
-gaussian = fspecial('gauss',30,5); 
+gaussian = fspecial('gauss',30,1); 
 mask1 = imfilter(mask1,gaussian,'replicate');
 mask2 = imfilter(mask2,gaussian,'replicate');
 featheredImage = mask1.*mosaic2(1:496,1:692)+mask2.*mosaic1;
 % blend by feathering
-imagesc(featheredImage) 
+imagesc(featheredImage), axis off, axis image 
 
 
 figure(2), imagesc(mosaic), colormap gray;
