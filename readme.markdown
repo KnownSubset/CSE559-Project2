@@ -4,12 +4,60 @@ _______
 
 ### Overview
 
+	```matlab
+    %Image1 & Image2 are already available
+    
+	%%SIFT Feature discovery
+	[F_1,D_1] = vl_sift(im2single(Im1));
+	[F_2,D_2] = vl_sift(im2single(Im2));
 
+	%Match keypoints (most similar features, compared to 2nd most similar)
+	[matches, scores] = score_matches(D_1,D_2);
+
+	%Compute Homography
+	for ih = 1:40
+	    points = randi(size(matches,2),1,4);
+    	A = [];
+	    b = [];
+	    %Build up matrix of unknowns and known points, from 4 random matched points 
+	    for ip = 1:4
+	        point1 = matches(1,points(ip));
+	        point2 = matches(2,points(ip));
+	        p1_X = F_1(1,point1);
+	        p1_Y = F_1(2,point1);
+	        p2_X = F_2(1,point2);
+	        p2_Y = F_2(2,point2);
+	        A = cat(1, A, [-p1_X -p1_Y -1 0 0 0 p1_X*p2_X p1_Y*p2_X]);
+	        A = cat(1, A, [ 0 0 0 -p1_X -p1_Y -1 p1_X*p2_Y p1_Y*p2_Y]);
+	        b = cat(1, b, [-p2_X; -p2_Y]);	     
+	    end
+	    
+	    %Solve for Homography
+	    V = A\b;
+	    
+	    %Rearrage to 3x3 matrix and store
+	    homographies(:,:,ih) = [V(1), V(2), V(3); V(4), V(5), V(6); V(7), V(8), 1];
+	    X2_ = homographies(:,:,ih) * X1;
+    	
+    	%Calculate the number of points that once projected onto image are within a close proximity
+	    du = X2_(1,:)./X2_(3,:) - X2(1,:)./X2(3,:) ;
+	    dv = X2_(2,:)./X2_(3,:) - X2(2,:)./X2(3,:) ;
+	    ok{ih} = (du.*du + dv.*dv) < PROXIMITY_LIMIT ;
+	    
+	    % score homography
+	    hscores(ih) = sum(ok{ih}) ;
+	end
+	
+	%Declare Success
+    
+    ```
+    
 ### Attempt 1
 ![Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/left.jpg "Left")
 ![Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/right.jpg "Right")
 ![Mosaic](https://github.com/KnownSubset/CSE559-Project2/raw/master/left-right1.jpg "Planar Mosaic")
 
+Here are the two images marked with the features that the _"interesting"_ features that vl_sift was able to discover;
 ![Sift-Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/sift-left.jpg "Sift-Left")
 ![Sift-Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/sift-right.jpg "Sift-Right")
 
