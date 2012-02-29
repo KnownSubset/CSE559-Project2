@@ -15,6 +15,7 @@ I cannot really supply any good puesdocode for merging the images together, as I
 	[F_2,D_2] = vl_sift(im2single(Im2));
 
 	%Match keypoints (most similar features, compared to 2nd most similar)
+	%by calculating the eucliandian distance between the every two point and take the closest  pair
 	[matches, scores] = score_matches(D_1,D_2);
 
 	%Compute Homography for a while
