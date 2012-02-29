@@ -1,8 +1,8 @@
 run('vlfeat-0.9.14/toolbox/vl_setup');
-imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/left1.png'),fspecial('Gaussian',[5 5],1));
+imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/WP_000292.jpg'),fspecial('Gaussian',[5 5],1));
 Image1 = im2double(imresize(imBlur,[400,525]))/255;
 Im1 = rgb2gray(Image1);
-imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/right1.png'),fspecial('Gaussian',[5 5],1));
+imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/WP_000293.jpg'),fspecial('Gaussian',[5 5],1));
 Image2 = im2double(imresize(imBlur,[400,525]))/255;
 Im2 = rgb2gray(Image2);
 
