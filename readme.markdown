@@ -69,18 +69,26 @@ Here are the two images with the matching points correlated aftering determing t
 2. % of inliers
 
  76 points out of 118 matches were able to matched between the two images
- ![Inliers-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers-1.jpg "inliers-1")
+ ![Inliers-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers1.jpg "inliers-1")
 
 3. Observations
 
 ### Attempt 2
+
+![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000288.jpg "Red")
+![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000291.jpg "White")
+
 1. Ransac
+ These two images were abled to be aligned, but for the wrong reason due to the vast similarity between the two images.  The homography that was produced by Ransac assumes that the one of the images should be mirror horizontially and laid almost directly on top of the other image.
+ The causes for this could be that I was so sleep deprived while taking the pictures that the angles of camera were different enough by Ransac's computations that I was mirroring the image.
 
 2. % of inliers
-
+ 
  82 points of 133.  This was unexpected to me, as the two images were vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
- ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers-2.jpg "inliers-2")
 
+ ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers2.jpg "inliers-2")
+ 
+ Another point of investigation could be to reshoot the images using a tripod and view the results.
 
 3. Observations
 
