@@ -55,18 +55,13 @@ I cannot really supply any good puesdocode for merging the images together, as I
     
 ### Attempt 1
 For my first attempt I used the two images from the slides as a way to help ensure that I was on the correct path to solving the problem.
-![Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/left1.jpg "Left")
-![Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/right1.jpg "Right")
+![Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/left1.png "Left")
+![Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/right1.png "Right")
 ![Mosaic](https://github.com/KnownSubset/CSE559-Project2/raw/master/left-right1.jpg "Planar Mosaic")
 
 Here are the two images marked with the _"interesting"_ features that vl_sift was able to discover.
 ![Sift-Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/sift-left.jpg "Sift-Left")
 ![Sift-Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/sift-right.jpg "Sift-Right")
-
-Here are the two images with the matching points correlated aftering determing the best matches.
-![Matches-Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/matches-left.jpg "matches-Left")
-![Matches-Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/matches-right.jpg "matches-Right")
-
 
 
 1. Ransac
@@ -78,6 +73,8 @@ Here are the two images with the matching points correlated aftering determing t
 	![Inliers-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers1.jpg "inliers-1")
 
 3. Observations
+	
+	I would expect that using different projection would help the image mosaic out, just as it did with the images of the sky & cliff from the lecture.  
 
 ### Attempt 2
 
@@ -96,17 +93,19 @@ Here are the two images with the matching points correlated aftering determing t
   The causes for this could be that I was so sleep deprived while taking the pictures that the angles of camera were different enough by Ransac's computations that I was mirroring the image.
 
   Here are the interesting points that were found by the vl_sift.
+
   ![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/red-pts.jpg "Red")
   ![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/white-pts.jpg "White")
 
+  I attempted to rectify some of this in the extension that I choose.  Another possible way might be to flip the first and third column of the homography before trying to do mosaicing.   
 
 2. Percentage of inliers
  
- This was unexpected to me, as the two images were vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
+ This was unexpected to me, as the two images are vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
  When I was debugging my code and using the vl_ubcmatch fuction packaged with vl_feat, the percentage of inliers was much higher.   82 points of 133.  I don't know if I should be proud of or disheartened that my percentage of inliers lower considering the two images were greatly similiar but the homography said that they should be flipped.
  ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers2.jpg "inliers-2")
  
- Another point of investigation could be to reshoot the images using a tripod and view the results.
+ Another point of investigation could be to reshoot the images using a tripod and view the results to see if the percentage of inliers was affected by the angle of the camera.
 
 3. Observations
   
@@ -129,6 +128,7 @@ Here are the two images with the matching points correlated aftering determing t
 
 3. Observations
 
+  I was hoping for something to align, but I guess Ransac is good with determining how images do not align as well.   This brings up the idea of using Ransac identify whether or not scenes are the same.  I also wonder at what level of a guassian/laplacian pyrimad might Ransac not be able to distinguish images that could be stiched togehter.
 _______
 
 # Extension #3 -> Implement and describe some method for smoothly blending together images that are geometrically aligned, but which have different lighting or gain or contrast. 
@@ -144,6 +144,8 @@ Feathering is a method that gradually fades two images together to help hide the
 ***window >= size of largest prominent feature
 **To avoid ghosting
 ***window <= 2*size of smallest prominent feature
+
+*Puesdo code for Feathering
 
     ```matlab
     width = size(Image1,2);
