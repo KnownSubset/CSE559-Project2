@@ -11,7 +11,7 @@ For projecting on the same surface, I stuck with a planar mapping.  If I had som
 The following puesdocode is what I used to generate the homography that mapped two images geometeries together.  
 I cannot really supply any good puesdocode for merging the images together, as I had a lot of difficulty with this aspect and had manually play around with the images until I was able to get it to work.
 
-1. PuesdoCode
+* PuesdoCode
 
     ```matlab
     %Image1 & Image2 are already available
@@ -131,8 +131,9 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
   I was hoping for something to align, but I guess Ransac is good with determining how images do not align as well.   This brings up the idea of using Ransac identify whether or not scenes are the same.  I also wonder at what level of a guassian/laplacian pyrimad might Ransac not be able to distinguish images that could be stiched together.
 _______
 
-# Extension #3 -> 
-##Implement and describe some method for smoothly blending together images that are geometrically aligned, but which have different lighting or gain or contrast. 
+# Extension #3 
+
+  Implement and describe some method for smoothly blending together images that are geometrically aligned, but which have different lighting or gain or contrast. 
 
 _______
 
