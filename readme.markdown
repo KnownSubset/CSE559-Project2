@@ -55,8 +55,8 @@ I cannot really supply any good puesdocode for merging the images together, as I
     
 ### Attempt 1
 For my first attempt I used the two images from the slides as a way to help ensure that I was on the correct path to solving the problem.
-![Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/left.jpg "Left")
-![Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/right.jpg "Right")
+![Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/left1.jpg "Left")
+![Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/right1.jpg "Right")
 ![Mosaic](https://github.com/KnownSubset/CSE559-Project2/raw/master/left-right1.jpg "Planar Mosaic")
 
 Here are the two images marked with the features that the _"interesting"_ features that vl_sift was able to discover.
