@@ -88,7 +88,6 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
   ![Candle Mosaic](https://github.com/KnownSubset/CSE559-Project2/raw/master/candle-mosaic.jpg "Candles Mosaic")
 
 1. Ransac
-  
   These two images were abled to be aligned, but for the wrong reasons due to the vast similarity between the two images.  The homography that was produced by Ransac assumes that the one of the images should be mirror horizontially and laid almost directly on top of the other image.
   The causes for this could be that I was so sleep deprived while taking the pictures that the angles of camera were different enough by Ransac's computations that I was mirroring the image.
 
@@ -101,11 +100,11 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
 
 2. Percentage of inliers
  
- This was unexpected to me, as the two images are vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
- When I was debugging my code and using the vl_ubcmatch fuction packaged with vl_feat, the percentage of inliers was much higher.   82 points of 133.  I don't know if I should be proud of or disheartened that my percentage of inliers lower considering the two images were greatly similiar but the homography said that they should be flipped.
- ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers2.jpg "inliers-2")
+  This was unexpected to me, as the two images are vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
+  When I was debugging my code and using the vl_ubcmatch fuction packaged with vl_feat, the percentage of inliers was much higher.   82 points of 133.  I don't know if I should be proud of or disheartened that my percentage of inliers lower considering the two images were greatly similiar but the homography said that they should be flipped.
+  ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers2.jpg "inliers-2")
  
- Another point of investigation could be to reshoot the images using a tripod and view the results to see if the percentage of inliers was affected by the angle of the camera.
+  Another point of investigation could be to reshoot the images using a tripod and view the results to see if the percentage of inliers was affected by the angle of the camera.
 
 3. Observations
   
@@ -122,7 +121,7 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
 
 2. Percentage of inliers
 
-  0% were inliers, since 0 matches were produced.  If you examine the images below you will see that the points deemed interesting by vl_feat did not coorespond in both images.
+  There were 0% inliers, since 0 matches were produced.  If you examine the images below you will see that the points deemed interesting by vl_feat did not coorespond in both images.
 
   ![Failure-Interesting-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts1.jpg "failure-Interesting-1")
   ![Failure-Interesting-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts2.jpg "failure-Interesting-2")
