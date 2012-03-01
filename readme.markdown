@@ -112,6 +112,7 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
   Considering that Ransac wanted to flip one of the images, I think the results still would have came looking out alright.  
 
 ### Attempt 3 (Failure Example)
+
 1. Ransac
 
   It preformed as expected, since I expected Ransac would not be able to solve for these two images.  There was no overlap between the two images even though they shared some same characteristics, like the wood door frame and the proximity of a walls' corner.
@@ -129,6 +130,7 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
 3. Observations
 
   I was hoping for something to align, but I guess Ransac is good with determining how images do not align as well.   This brings up the idea of using Ransac identify whether or not scenes are the same.  I also wonder at what level of a guassian/laplacian pyrimad might Ransac not be able to distinguish images that could be stiched together.
+
 _______
 
 # Extension #3 
