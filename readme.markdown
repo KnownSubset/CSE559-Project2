@@ -88,47 +88,46 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
   ![Candle Mosaic](https://github.com/KnownSubset/CSE559-Project2/raw/master/candle-mosaic.jpg "Candles Mosaic")
 
 1. Ransac
-  These two images were abled to be aligned, but for the wrong reasons due to the vast similarity between the two images.  The homography that was produced by Ransac assumes that the one of the images should be mirror horizontially and laid almost directly on top of the other image.
-  The causes for this could be that I was so sleep deprived while taking the pictures that the angles of camera were different enough by Ransac's computations that I was mirroring the image.
+    These two images were abled to be aligned, but for the wrong reasons due to the vast similarity between the two images.  The homography that was produced by Ransac assumes that the one of the images should be mirror horizontially and laid almost directly on top of the other image.
+    The causes for this could be that I was so sleep deprived while taking the pictures that the angles of camera were different enough by Ransac's computations that I was mirroring the image.
 
-  Here are the interesting points that were found by the vl_sift.
+	Here are the interesting points that were found by the vl_sift.
+	![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/red-pts.jpg "Red")
+	![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/white-pts.jpg "White")
 
-  ![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/red-pts.jpg "Red")
-  ![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/white-pts.jpg "White")
-
-  I attempted to rectify some of this in the extension that I choose.  Another possible way might be to flip the first and third column of the homography before trying to do mosaicing.   
+	I attempted to rectify some of this in the extension that I choose.  Another possible way might be to flip the first and third column of the homography before trying to do mosaicing.   
 
 2. Percentage of inliers
  
-  This was unexpected to me, as the two images are vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
-  When I was debugging my code and using the vl_ubcmatch fuction packaged with vl_feat, the percentage of inliers was much higher.   82 points of 133.  I don't know if I should be proud of or disheartened that my percentage of inliers lower considering the two images were greatly similiar but the homography said that they should be flipped.
-  ![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers2.jpg "inliers-2")
+	This was unexpected to me, as the two images are vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
+	When I was debugging my code and using the vl_ubcmatch fuction packaged with vl_feat, the percentage of inliers was much higher.   82 points of 133.  I don't know if I should be proud of or disheartened that my percentage of inliers lower considering the two images were greatly similiar but the homography said that they should be flipped.
+	![Inliers-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers2.jpg "inliers-2")
  
-  Another point of investigation could be to reshoot the images using a tripod and view the results to see if the percentage of inliers was affected by the angle of the camera.
+	Another point of investigation could be to reshoot the images using a tripod and view the results to see if the percentage of inliers was affected by the angle of the camera.
 
 3. Observations
   
-  Considering that Ransac wanted to flip one of the images, I think the results still would have came looking out alright.  
+	Considering that Ransac wanted to flip one of the images, I think the results still would have came looking out alright.  
 
 ### Attempt 3 (Failure Example)
 
 1. Ransac
 
-  It preformed as expected, since I expected Ransac would not be able to solve for these two images.  There was no overlap between the two images even though they shared some same characteristics, like the wood door frame and the proximity of a walls' corner.
+	It preformed as expected, since I expected Ransac would not be able to solve for these two images.  There was no overlap between the two images even though they shared some same characteristics, like the wood door frame and the proximity of a walls' corner.
 
-  ![Failure-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000292.jpg "failure-1")
-  ![Failure-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000293.jpg "failure-2")
+	![Failure-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000292.jpg "failure-1")
+	![Failure-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000293.jpg "failure-2")
 
 2. Percentage of inliers
 
-  There were 0% inliers, since 0 matches were produced.  If you examine the images below you will see that the points deemed interesting by vl_feat did not coorespond in both images.
+	There were 0% inliers, since 0 matches were produced.  If you examine the images below you will see that the points deemed interesting by vl_feat did not coorespond in both images.
 
-  ![Failure-Interesting-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts1.jpg "failure-Interesting-1")
-  ![Failure-Interesting-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts2.jpg "failure-Interesting-2")
+	![Failure-Interesting-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts1.jpg "failure-Interesting-1")
+	![Failure-Interesting-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts2.jpg "failure-Interesting-2")
 
 3. Observations
 
-  I was hoping for something to align, but I guess Ransac is good with determining how images do not align as well.   This brings up the idea of using Ransac identify whether or not scenes are the same.  I also wonder at what level of a guassian/laplacian pyrimad might Ransac not be able to distinguish images that could be stiched together.
+	I was hoping for something to align, but I guess Ransac is good with determining how images do not align as well.   This brings up the idea of using Ransac identify whether or not scenes are the same.  I also wonder at what level of a guassian/laplacian pyrimad might Ransac not be able to distinguish images that could be stiched together.
 
 _______
 
