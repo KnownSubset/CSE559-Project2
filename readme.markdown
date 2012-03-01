@@ -201,7 +201,7 @@ Or as we can see in picuters
 
 These images were taken from Chaman Singh Verma's  and Mon-Ju's page on [image blending](http://pages.cs.wisc.edu/~csverma/CS766_09/ImageMosaic/imagemosaic.html)
 
-I attempted to calculate the window in which the blending would need to occur instead of attempting on the entire image as the math requires the matrixes to be of the same size.  I did not know of a reasonable way to get this working with cropping the images to be the same size.  When attempting this on the region of the images that would need to be blended, the results were quite disasterious.
+I attempted to calculate the window in which the blending would need to occur instead of attempting on the entire image as the math requires the matrixes to be of the same size.  I did not know of a reasonable way to get this working with cropping the images to be the same size.  When attempting this on the region of the images that would need to be blended, the results were quite disasterious.  Now I know that the feather blend would have helped to removed the lines that were obvious in the picture beloew.
 
 ![Lapcian Blend results](https://github.com/KnownSubset/CSE559-Project2/raw/master/blend-failure.jpg "Lapcian Blend")
 
