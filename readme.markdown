@@ -208,7 +208,7 @@ I attempted to calculate the window in which the blending would need to occur in
 ![Lapcian Blend failure](https://github.com/KnownSubset/CSE559-Project2/raw/master/pyramid.jpg "Lapcian Blend failure")
 
 
-As I found out with a little insight the correct way to use Laplacian blend would have to basically apply the feathering techniques on the entire image that was generated through Laplacian pyramids.
+* As I found out with a little insight the correct way to use Laplacian blend would have to basically apply the feathering techniques on the entire image that was generated through Laplacian pyramids.
 
     ```matlab
     width = size(Image1,2);
