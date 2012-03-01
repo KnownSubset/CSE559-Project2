@@ -59,7 +59,7 @@ For my first attempt I used the two images from the slides as a way to help ensu
 ![Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/right1.jpg "Right")
 ![Mosaic](https://github.com/KnownSubset/CSE559-Project2/raw/master/left-right1.jpg "Planar Mosaic")
 
-Here are the two images marked with the features that the _"interesting"_ features that vl_sift was able to discover.
+Here are the two images marked with the _"interesting"_ features that vl_sift was able to discover.
 ![Sift-Left](https://github.com/KnownSubset/CSE559-Project2/raw/master/sift-left.jpg "Sift-Left")
 ![Sift-Right](https://github.com/KnownSubset/CSE559-Project2/raw/master/sift-right.jpg "Sift-Right")
 
@@ -70,30 +70,37 @@ Here are the two images with the matching points correlated aftering determing t
 
 
 1. Ransac
- The algorithm was able to produce reasonable results from matching points.  The best homography that was produced was able to map images coordinates systems together. Some of the features that I am surprised that did not come out of SIFT are: the land that juts out of the inlet, the top of the snowy peak.  I assume that the snow peak was not choosen since parts of the snow cap could be confused with the cloud that close.
+	The algorithm was able to produce reasonable results from matching points.  The best homography that was produced was able to map images coordinates systems together. Some of the features that I am surprised that did not come out of SIFT are: the land that juts out of the inlet, the top of the snowy peak.  I assume that the snow peak was not choosen since parts of the snow cap could be confused with the cloud that close.
 
 2. Percentage of inliers
-
- 76 points out of 118 matches were able to matched between the two images.  As you can see from the images below, the inliers that were found map fairly well between the two images.  Some of the outliers were features that were in the reflection of the original image from the lake.   It would have been interesting to mirror the image horizontially and see how the images would have mapped between each other.  Other outliers were the faces of the various cliffs that were excluded once the best homography found that those two points would not line up.
- ![Inliers-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers1.jpg "inliers-1")
+	
+	76 points out of 118 matches were able to matched between the two images.  As you can see from the images below, the inliers that were found map fairly well between the two images.  Some of the outliers were features that were in the reflection of the original image from the lake.   It would have been interesting to mirror the image horizontially and see how the images would have mapped between each other.  Other outliers were the faces of the various cliffs that were excluded once the best homography found that those two points would not line up.
+	![Inliers-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/inliers1.jpg "inliers-1")
 
 3. Observations
 
 ### Attempt 2
 
-![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000288.jpg "Red")
-![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000291.jpg "White")
+  This is a bit of a precursor to the extension that I selected.  Here are two images from the same general scene, but main objects are different candles. 
+
+  ![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000288.jpg "Red")
+  ![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000291.jpg "White")
+	
+  Here is _"mosaic"_ of the two images.  I trimmed off some of the width on the overlapping image so that it didn't completely hide the underlying image.
+  
+  ![Candle Mosaic](https://github.com/KnownSubset/CSE559-Project2/raw/master/candle-mosaic.jpg "Candles Mosaic")
 
 1. Ransac
- These two images were abled to be aligned, but for the wrong reason due to the vast similarity between the two images.  The homography that was produced by Ransac assumes that the one of the images should be mirror horizontially and laid almost directly on top of the other image.
- The causes for this could be that I was so sleep deprived while taking the pictures that the angles of camera were different enough by Ransac's computations that I was mirroring the image.
+  
+  These two images were abled to be aligned, but for the wrong reasons due to the vast similarity between the two images.  The homography that was produced by Ransac assumes that the one of the images should be mirror horizontially and laid almost directly on top of the other image.
+  The causes for this could be that I was so sleep deprived while taking the pictures that the angles of camera were different enough by Ransac's computations that I was mirroring the image.
 
-![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/red-pts.jpg "Red")
-![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/white-pts.jpg "White")
+  Here are the interesting points that were found by the vl_sift.
+  ![Red](https://github.com/KnownSubset/CSE559-Project2/raw/master/red-pts.jpg "Red")
+  ![White](https://github.com/KnownSubset/CSE559-Project2/raw/master/white-pts.jpg "White")
 
-Here are the interesting points that were found by the vl_sift.
 
-2. % of inliers
+2. Percentage of inliers
  
  This was unexpected to me, as the two images were vastly similar I was expecting the percentage of inliers to be much higher for the best homography.  This could be an indicator that I am a homography that is sufficient instead of correctly choosing the best possible homography.  I will have to revisit this at a later date for further investigation.
  When I was debugging my code and using the vl_ubcmatch fuction packaged with vl_feat, the percentage of inliers was much higher.   82 points of 133.  I don't know if I should be proud of or disheartened that my percentage of inliers lower considering the two images were greatly similiar but the homography said that they should be flipped.
@@ -102,18 +109,24 @@ Here are the interesting points that were found by the vl_sift.
  Another point of investigation could be to reshoot the images using a tripod and view the results.
 
 3. Observations
+  
+  Considering that Ransac wanted to flip one of the images, I think the results still would have came looking out alright.  
 
 ### Attempt 3 (Failure Example)
 1. Ransac
-It preformed as expected, since I expected Ransac would not be able to solve for these two images.  There was no overlap between the two images even though they shared some same characteristics, like the wood door frame and the proximity of a walls' corner.
 
-![Failure-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000292.jpg "failure-1")
-![Failure-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000293.jpg "failure-2")
-2. % of inliers
-0% were inliers, since 0 matches were produced.  If you examine the images below you will see that the points deemed interesting by vl_feat did not coorespond in both images.
+  It preformed as expected, since I expected Ransac would not be able to solve for these two images.  There was no overlap between the two images even though they shared some same characteristics, like the wood door frame and the proximity of a walls' corner.
 
-![Failure-Interesting-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts1.jpg "failure-Interesting-1")
-![Failure-Interesting-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts2.jpg "failure-Interesting-2")
+  ![Failure-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000292.jpg "failure-1")
+  ![Failure-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/WP_000293.jpg "failure-2")
+
+2. Percentage of inliers
+
+  0% were inliers, since 0 matches were produced.  If you examine the images below you will see that the points deemed interesting by vl_feat did not coorespond in both images.
+
+  ![Failure-Interesting-1](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts1.jpg "failure-Interesting-1")
+  ![Failure-Interesting-2](https://github.com/KnownSubset/CSE559-Project2/raw/master/Failure-Pts2.jpg "failure-Interesting-2")
+
 3. Observations
 
 _______
