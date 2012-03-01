@@ -74,7 +74,7 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
 
 3. Observations
 	
-	I would expect that using different projection would help the image mosaic out, just as it did with the images of the sky & cliff from the lecture.  
+	I would expect that using different projections would help make the image mosaic more believable. The angle of the image on the left is too sharp and seems to have it's depth information and scale information skewed.  This was apparent just as it was with the images of the sky & cliff from the lecture slick deck.  
 
 ### Attempt 2
 
@@ -128,14 +128,15 @@ Here are the two images marked with the _"interesting"_ features that vl_sift wa
 
 3. Observations
 
-  I was hoping for something to align, but I guess Ransac is good with determining how images do not align as well.   This brings up the idea of using Ransac identify whether or not scenes are the same.  I also wonder at what level of a guassian/laplacian pyrimad might Ransac not be able to distinguish images that could be stiched togehter.
+  I was hoping for something to align, but I guess Ransac is good with determining how images do not align as well.   This brings up the idea of using Ransac identify whether or not scenes are the same.  I also wonder at what level of a guassian/laplacian pyrimad might Ransac not be able to distinguish images that could be stiched together.
 _______
 
-# Extension #3 -> Implement and describe some method for smoothly blending together images that are geometrically aligned, but which have different lighting or gain or contrast. 
+# Extension #3 -> 
+##Implement and describe some method for smoothly blending together images that are geometrically aligned, but which have different lighting or gain or contrast. 
 
 _______
 
-#Feathering blend
+###Feathering blend
 
 Feathering is a method that gradually fades two images together to help hide the differences.  Part of the method invovles determining the optimal window to apply the feathering within.
 
@@ -145,7 +146,7 @@ Feathering is a method that gradually fades two images together to help hide the
 **To avoid ghosting
 ***window <= 2*size of smallest prominent feature
 
-*Puesdo code for Feathering
+* Puesdo code for Feathering
 
     ```matlab
     width = size(Image1,2);
