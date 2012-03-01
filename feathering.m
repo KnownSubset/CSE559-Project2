@@ -2,7 +2,7 @@ run('vlfeat-0.9.14/toolbox/vl_setup');
 imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/WP_000288.jpg'),fspecial('Gaussian',[5 5],1));
 Image1 = im2double(imresize(imBlur,[500,700]))/255;
 Im1 = rgb2gray(Image1);
-imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/WP_000291.jpg'),fspecial('Gaussian',[5 5],1));
+imBlur = imfilter(imread('/Users/nathan/Development/CSE559-Project2/WP_000294.jpg'),fspecial('Gaussian',[5 5],1));
 Image2 = im2double(imresize(imBlur,[500,700]))/255;
 Im2 = rgb2gray(Image2);
 
@@ -33,7 +33,34 @@ Im2 = rgb2gray(Image2);
 [vectorLength2,descriptorCount2] = size(D_2);
 
 %use ubc for now, will replace once I have it working
-[matches, scores] = vl_ubcmatch(D_1,D_2);
+[dmatches, dscores] = vl_ubcmatch(D_1,D_2); % using this only for debugging
+
+matches = [];
+scores = [];
+% A descriptor D1 is matched to a descriptor D2 only if the
+% distance d(D1,D2) multiplied by THRESH is not greater than the
+% distance of D1 to all other descriptors. The default value of
+% THRESH is 1.5.
+for ix=1:size(D_1,2)
+    
+    d1 = D_1(:,ix);
+    d2s = zeros(1,size(D_2,2));
+    for iy=1:size(D_2,2)
+        d2 = D_2(:,iy);
+        distance = 0;
+        for iz=1:128
+            distance = distance + (double(d1(iz,1)) - double(d2(iz,1)))^2;
+            
+        end
+        d2s(iy) = sqrt(distance)*1.5;
+    end
+    [score, match] = min(d2s);
+    if (score < 200)
+        matches = cat(2,matches,[ix; match]);
+        scores = cat(2,scores,d2s(match));
+    end
+end
+
 
 similarity = zeros(descriptorCount,descriptorCount2);
 maxSimilarity = zeros(1,descriptorCount);
@@ -85,7 +112,7 @@ for ih = 1:40
 end
 
 [value, index]=max(hscores);
-
+inliers = value/size(scores,2)
 %% Merge images together
 t = maketform('projective',homographies(:,:,index)');
 [mosaic1 xdata1 ydata1] = imtransform(Im1,t);
@@ -119,7 +146,7 @@ imagesc(mosaic);
 %% Blending
 
 
-%% image pyramid
+%% by feathering
 imBlur = mosaic1;
 ls1 = cell([1 6]);gs1 = cell([1 6]);
 
@@ -141,18 +168,17 @@ for ix = 1:6;
     gs2{ix} = imG;
 end
 
-mask1 = zeros(size(mosaic1));
+mask1 = zeros([500 696]);
 mask1(:,1:(size(mask1,2)*.52)) = 1;
 mask2 = 1-mask1;
 % The elements that are = 1, will be blurred, which will cause the
 % feathering effect that I am looking for
-gaussian = fspecial('gauss',30,1); 
+gaussian = fspecial('gauss',30,15); 
 mask1 = imfilter(mask1,gaussian,'replicate');
 mask2 = imfilter(mask2,gaussian,'replicate');
-featheredImage = mask1.*mosaic2(1:496,1:692)+mask2.*mosaic1;
+featheredImage = mask1.*mosaic1(1:500,1:696)+mask2.*mosaic2(:,1:696);
 % blend by feathering
 imagesc(featheredImage), axis off, axis image 
 
 
 figure(2), imagesc(mosaic), colormap gray;
-figure(3), imagesc(lss{1})

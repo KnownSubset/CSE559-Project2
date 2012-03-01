@@ -33,7 +33,33 @@ Im2 = rgb2gray(Image2);
 [vectorLength2,descriptorCount2] = size(D_2);
 
 %use ubc for now, will replace once I have it working
-[matches, scores] = vl_ubcmatch(D_1,D_2);
+[dmatches, dscores] = vl_ubcmatch(D_1,D_2); % using this only for debugging
+
+matches = [];
+scores = [];
+% A descriptor D1 is matched to a descriptor D2 only if the
+% distance d(D1,D2) multiplied by THRESH is not greater than the
+% distance of D1 to all other descriptors. The default value of
+% THRESH is 1.5.
+for ix=1:size(D_1,2)
+    
+    d1 = D_1(:,ix);
+    d2s = zeros(1,size(D_2,2));
+    for iy=1:size(D_2,2)
+        d2 = D_2(:,iy);
+        distance = 0;
+        for iz=1:128
+            distance = distance + (double(d1(iz,1)) - double(d2(iz,1)))^2;
+            
+        end
+        d2s(iy) = sqrt(distance)*1.5;
+    end
+    [score, match] = min(d2s);
+    if (score < 200)
+        matches = cat(2,matches,[ix; match]);
+        scores = cat(2,scores,d2s(match));
+    end
+end
 
 similarity = zeros(descriptorCount,descriptorCount2);
 maxSimilarity = zeros(1,descriptorCount);
@@ -86,8 +112,40 @@ end
 
 [value, index]=max(hscores);
 
+inliers = value/size(scores,2) % percentage of inliers
+
+% --------------------------------------------------------------------
+%                                                         Show matches
+% --------------------------------------------------------------------
+
+dh1 = max(size(Im2,1)-size(Im1,1),0) ;
+dh2 = max(size(Im1,1)-size(Im2,1),0) ;
+ok = ok{index} ;
+figure(1) ; clf ;
+subplot(2,1,1) ;
+imagesc([padarray(Im1,dh1,'post') padarray(Im2,dh2,'post')]) ;
+o = size(Im1,2) ;
+line([F_1(1,matches(1,:));F_2(1,matches(2,:))+o], ...
+     [F_1(2,matches(1,:));F_2(2,matches(2,:))]) ;
+title(sprintf('%d tentative matches', size(matches,2))) ;
+axis image off ;
+
+subplot(2,1,2) ;
+imagesc([padarray(Im1,dh1,'post') padarray(Im2,dh2,'post')]) ;
+o = size(Im1,2) ;
+line([F_1(1,matches(1,ok));F_2(1,matches(2,ok))+o], ...
+     [F_1(2,matches(1,ok));F_2(2,matches(2,ok))]) ;
+title(sprintf('%d (%.2f%%) inliner matches out of %d', ...
+              sum(ok), ...
+              100*sum(ok)/size(matches,2), ...
+              size(matches,2))) ;
+axis image off ;
+
+drawnow ;
+
+
 %% Merge images together
-t = maketform('projective',homographies(:,:,index)');
+t = maketform('projective',H');
 [mosaic1 xdata1 ydata1] = imtransform(Im1,t);
 imagesc(mosaic1), colormap gray;
 
@@ -146,7 +204,7 @@ for ix = 1:6;
     gs2{ix} = imG;
 end
 
-limgo = cell(1,6); % the blended pyramid
+pyramid = cell(1,6); % the blended pyramid
 lss = cell(1,6); % the blended pyramid
 for p = 1:3
     
@@ -157,12 +215,12 @@ for p = 1:3
     lss{p} = ls;
     maskap = gs1{p};
 	maskbp = gs2{p};
-	limgo{p} = ls1{p}.*maskap + ls2{p}.*(1 - maskbp);  %Form a combined pyramid LS from LA and LB using nodes of GR as weights: LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
+	pyramid{p} = ls1{p}.*maskap + ls2{p}.*(1 - maskbp);  %Form a combined pyramid LS from LA and LB using nodes of GR as weights: LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
 end
 
-imBlur = zeros(size(limgo{6}));
+imBlur = zeros(size(pyramid{6}));
 for p = 3:2
-    limgo{p-1} = limgo{p-1} + impyramid(limgo{p}, 'expand'); 
+    pyramid{p-1} = pyramid{p-1} + impyramid(pyramid{p}, 'expand'); 
     lss{p-1} = lss{p-1} + impyramid(lss{p}, 'expand'); 
 end
 xStart = floor(abs(xdata1(1)));

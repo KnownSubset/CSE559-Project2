@@ -14,11 +14,17 @@ Im2 = rgb2gray(Image2);
 figure(1), imagesc(Im1), colormap gray, axis off, axis image;
 hold on;
 perm = randperm(size(F_1,2)) ; 
-sel = perm(1:50) ;
+sel = perm(1:10) ;
 h1 = vl_plotframe(F_1(:,sel)) ; 
 h2 = vl_plotframe(F_1(:,sel)) ; 
 set(h1,'color','k','linewidth',3) ;
 set(h2,'color','y','linewidth',2) ;
+Image = real(Im1 + h1 + h2);
+Image = Image - min(min(Image));
+Image = Image / max(max(Image));
+
+figure(5), imagesc(Image), colormap jet, axis off, axis image, title('Hybrid Image');
+imwrite(Image, '/Users/nathan/Development/CSE559-Project2/InterestingPts1.jpg');
 
 figure(2), imagesc(Im2), colormap gray, axis off, axis image;
 hold on;
@@ -33,7 +39,34 @@ set(h2,'color','y','linewidth',2) ;
 [vectorLength2,descriptorCount2] = size(D_2);
 
 %use ubc for now, will replace once I have it working
-[matches, scores] = vl_ubcmatch(D_1,D_2);
+[dmatches, dscores] = vl_ubcmatch(D_1,D_2); % using this only for debugging
+
+matches = [];
+scores = [];
+% A descriptor D1 is matched to a descriptor D2 only if the
+% distance d(D1,D2) multiplied by THRESH is not greater than the
+% distance of D1 to all other descriptors. The default value of
+% THRESH is 1.5.
+for ix=1:size(D_1,2)
+    
+    d1 = D_1(:,ix);
+    d2s = zeros(1,size(D_2,2));
+    for iy=1:size(D_2,2)
+        d2 = D_2(:,iy);
+        distance = 0;
+        for iz=1:128
+            distance = distance + (double(d1(iz,1)) - double(d2(iz,1)))^2;
+            
+        end
+        d2s(iy) = sqrt(distance)*1.5;
+    end
+    [score, match] = min(d2s);
+    if (score < 200)
+        matches = cat(2,matches,[ix; match]);
+        scores = cat(2,scores,d2s(match));
+    end
+end
+
 
 similarity = zeros(descriptorCount,descriptorCount2);
 maxSimilarity = zeros(1,descriptorCount);
@@ -48,11 +81,11 @@ for ix = 1:descriptorCount;
 end
 
 %% Ransac
-hscores = zeros(1,1:40);
+hscores = zeros(1,1:11);
 % score homography
-X1 = cat(1,F_1(1:2,matches(1,:)),ones(1,size(matches,2)));
+X1 = cat(1,F_1(1:2,matches(1,11)),ones(1,size(matches,2)));
 X2 = cat(1,F_2(1:2,matches(2,:)),ones(1,size(matches,2)));
-homographies = zeros(3,3,40);
+homographies = zeros(3,3,11);
 for ih = 1:40
     points = randi(size(matches,2),1,4);
     A = [];
@@ -85,6 +118,8 @@ for ih = 1:40
 end
 
 [value, index]=max(hscores);
+
+inliers = value/size(scores,2)
 
 %% Merge images together
 t = maketform('projective',homographies(:,:,index)');
@@ -146,7 +181,7 @@ for ix = 1:6;
     gs2{ix} = imG;
 end
 
-limgo = cell(1,6); % the blended pyramid
+pyramid = cell(1,6); % the blended pyramid
 lss = cell(1,6); % the blended pyramid
 for p = 1:6
     
@@ -157,12 +192,12 @@ for p = 1:6
     lss{p} = ls;
     maskap = gs1{p};
 	maskbp = gs2{p};
-	limgo{p} = ls1{p}.*maskap + ls2{p}.*(1 - maskbp);  %Form a combined pyramid LS from LA and LB using nodes of GR as weights: LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
+	pyramid{p} = ls1{p}.*maskap + ls2{p}.*(1 - maskbp);  %Form a combined pyramid LS from LA and LB using nodes of GR as weights: LS(i,j) = GR(I,j,)*LA(I,j) + (1-GR(I,j))*LB(I,j)
 end
 
-imBlur = zeros(size(limgo{6}));
+imBlur = zeros(size(pyramid{6}));
 for p = 6:2
-    limgo{p-1} = limgo{p-1} + impyramid(limgo{p}, 'expand'); 
+    pyramid{p-1} = pyramid{p-1} + impyramid(pyramid{p}, 'expand'); 
     lss{p-1} = lss{p-1} + impyramid(lss{p}, 'expand'); 
 end
 

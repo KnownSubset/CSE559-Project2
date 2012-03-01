@@ -225,7 +225,6 @@ I attempted to calculate the window in which the blending would need to occur in
     end
     %Reconstruct Image
     for level = 6:2;
-       limgo{p-1} = limgo{p-1} + impyramid(limgo{p}, 'expand');
        laplacians{p-1} = laplacians{p-1} + impyramid(laplacians{p}, 'expand');
     end
 
