@@ -11,6 +11,8 @@ For projecting on the same surface, I stuck with a planar mapping.  If I had som
 The following puesdocode is what I used to generate the homography that mapped two images geometeries together.  
 I cannot really supply any good puesdocode for merging the images together, as I had a lot of difficulty with this aspect and had manually play around with the images until I was able to get it to work.
 
+1. PuesdoCode
+
     ```matlab
     %Image1 & Image2 are already available
 
@@ -68,7 +70,7 @@ Here are the two images with the matching points correlated aftering determing t
 
 
 1. Ransac
- The algorithm was able to produce reasonable results from matching points.  The best homography that was produced was able to map images coordinates systems together.
+ The algorithm was able to produce reasonable results from matching points.  The best homography that was produced was able to map images coordinates systems together. Some of the features that I am surprised that did not come out of SIFT are: the land that juts out of the inlet, the top of the snowy peak.  I assume that the snow peak was not choosen since parts of the snow cap could be confused with the cloud that close.
 
 2. Percentage of inliers
 
